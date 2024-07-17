@@ -4,6 +4,7 @@ from django.forms.models import model_to_dict
 from django.test import TestCase
 from django.utils import timezone
 from django.urls import reverse
+from rest_framework import status
 
 from contacts.models import Contact
 
@@ -49,7 +50,7 @@ class ContactListViewTests(TestCase):
         response = self.client.get(
             reverse('contacts:index'), 
             args=(contacts))
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_add_contact_success(self):
         """
@@ -63,7 +64,7 @@ class ContactListViewTests(TestCase):
             reverse('contacts:index'), 
             data=(data), 
             content_type='application/json')
-        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_add_contact_failure(self):
         """
@@ -77,7 +78,7 @@ class ContactListViewTests(TestCase):
             reverse('contacts:index'), 
             data=(data), 
             content_type='application/json')
-        self.assertEqual(response.status_code, 400)        
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)        
 
 
 class ContactDetailViewTests(TestCase):
@@ -90,7 +91,7 @@ class ContactDetailViewTests(TestCase):
             last_name='last')
         response = self.client.get(
             reverse('contacts:detail', kwargs={'pk':contact.pk}))
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_contact_dne(self):
         """
@@ -98,7 +99,7 @@ class ContactDetailViewTests(TestCase):
         """
         response = self.client.get(
             reverse('contacts:detail', kwargs={'pk': 2}))
-        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_contact_updatable(self):
         """
@@ -116,7 +117,7 @@ class ContactDetailViewTests(TestCase):
             data=update_contact,
             content_type='application/json'
         )
-        self.assertEqual(response.status_code, 204)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
     def test_contact_delete(self):
         """
@@ -127,4 +128,4 @@ class ContactDetailViewTests(TestCase):
             reverse('contacts:detail', kwargs={'pk': contact.pk}),
             content_type='application/json'
         )
-        self.assertEqual(response.status_code, 204)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
