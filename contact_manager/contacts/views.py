@@ -1,5 +1,4 @@
 from django.http import Http404
-from rest_framework.views import APIView
 from rest_framework import generics, mixins, status
 from rest_framework.response import Response
 
@@ -25,7 +24,7 @@ class ContactDetail(mixins.RetrieveModelMixin, mixins.DestroyModelMixin, generic
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
         
-    def put(self, request, pk):
+    def put(self, request, pk, format=None):
         try:
             contact = Contact.objects.get(pk=pk)
             serializer = ContactSerializer(contact, data=request.data)
