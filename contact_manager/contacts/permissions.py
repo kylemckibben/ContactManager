@@ -10,7 +10,6 @@ class IsOwner(permissions.BasePermission):
         if not request.user.is_authenticated:
             return False
 
-        # print(f"obj owner: {obj.owner} | request user: {request.user}")
         return obj.owner == request.user
 
 

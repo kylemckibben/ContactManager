@@ -57,7 +57,7 @@ class ContactListViewTests(TestCase):
             owner=user)
         contacts = [contact_1, contact_2]
         response = self.client.get(
-            reverse('contacts:index'), 
+            reverse('contact-list'), 
             args=(contacts))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
@@ -73,7 +73,7 @@ class ContactListViewTests(TestCase):
             owner=user)
         data = json.dumps(model_to_dict(contact))
         response = self.client.post(
-            reverse('contacts:index'), 
+            reverse('contact-list'), 
             data=(data), 
             content_type='application/json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -90,7 +90,7 @@ class ContactListViewTests(TestCase):
             owner=user)
         data = json.dumps(model_to_dict(contact))
         response = self.client.post(
-            reverse('contacts:index'), 
+            reverse('contact-list'), 
             data=(data), 
             content_type='application/json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)        
@@ -108,7 +108,7 @@ class ContactDetailViewTests(TestCase):
             last_name='last',
             owner=user)
         response = self.client.get(
-            reverse('contacts:detail', kwargs={'pk':contact.pk}))
+            reverse('contact-detail', kwargs={'pk':contact.pk}))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_contact_dne(self):
@@ -118,7 +118,7 @@ class ContactDetailViewTests(TestCase):
         user = User.objects.create(username='test_user')
         self.client.force_login(user=user)
         response = self.client.get(
-            reverse('contacts:detail', kwargs={'pk': 2}))
+            reverse('contact-detail', kwargs={'pk': 2}))
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_contact_not_owned_by(self):
@@ -142,7 +142,7 @@ class ContactDetailViewTests(TestCase):
             'owner': json.dumps(contact.owner, default=str)
         }
         response = self.client.put(
-            reverse('contacts:detail', kwargs={'pk': contact.pk}),
+            reverse('contact-detail', kwargs={'pk': contact.pk}),
             data=(update_contact),
             content_type='application/json')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
@@ -165,7 +165,7 @@ class ContactDetailViewTests(TestCase):
         }
         self.client.force_login(user=user)
         response = self.client.put(
-            reverse('contacts:detail', kwargs={'pk': contact.pk}),
+            reverse('contact-detail', kwargs={'pk': contact.pk}),
             data=(update_contact),
             content_type='application/json')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
@@ -181,7 +181,7 @@ class ContactDetailViewTests(TestCase):
             last_name='last',
             owner=user)
         response = self.client.delete(
-            reverse('contacts:detail', kwargs={'pk': contact.pk}),
+            reverse('contact-detail', kwargs={'pk': contact.pk}),
             content_type='application/json')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
@@ -197,6 +197,6 @@ class ContactDetailViewTests(TestCase):
             owner=not_user)
         self.client.force_login(user=user)
         response = self.client.delete(
-            reverse('contacts:detail', kwargs={'pk': contact.pk}),
+            reverse('contact-detail', kwargs={'pk': contact.pk}),
             content_type='application/json')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)

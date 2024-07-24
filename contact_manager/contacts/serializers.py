@@ -4,16 +4,20 @@ from rest_framework import serializers
 from contacts.models import Contact
 
 
-class ContactSerializer(serializers.ModelSerializer):
+class ContactSerializer(serializers.HyperlinkedModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
 
     class Meta:
         model = Contact
         fields = ['owner', 'id', 'first_name', 'last_name', 'email', 'phone', 'notes']
-        read_only_fields = ['owner']
 
 
-class UserSerializer(serializers.ModelSerializer):
+class UserSerializer(serializers.HyperlinkedModelSerializer):
+    contacts = serializers.HyperlinkedRelatedField(
+        many=True, 
+        view_name='contact-detail', 
+        read_only=True)
+
     def create(self, validated_data):
         user = User.objects.create_user(
             username=validated_data['username'],
@@ -33,4 +37,4 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'password', 'email', 'first_name', 'last_name']
+        fields = ['id', 'username', 'password', 'email', 'first_name', 'last_name', 'contacts']

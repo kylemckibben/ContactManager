@@ -1,7 +1,8 @@
 from django.contrib.auth.models import User
-from django.http import Http404
 from rest_framework import generics, permissions, status
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework.reverse import reverse
 
 from contacts.models import Contact
 from contacts.permissions import IsOwner, IsUser

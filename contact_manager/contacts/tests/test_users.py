@@ -20,7 +20,7 @@ class UserCreateTests(TestCase):
             'last_name': 'User'
         }
         response = self.client.post(
-            reverse('contacts:register'),
+            reverse('user-create'),
             data=(user),
             content_type='application/json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -38,7 +38,7 @@ class UserCreateTests(TestCase):
             'last_name': 'User'
         }
         response = self.client.post(
-            reverse('contacts:register'),
+            reverse('user-create'),
             data=(new_user),
             content_type='application/json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -52,7 +52,7 @@ class UserDetailTests(TestCase):
         user = User.objects.create(username='test_user')
         self.client.force_login(user=user)
         response = self.client.get(
-            reverse('contacts:profile', kwargs={'pk': user.pk}))
+            reverse('user-detail', kwargs={'pk': user.pk}))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_get_user_unauthorized(self):
@@ -63,7 +63,7 @@ class UserDetailTests(TestCase):
         user = User.objects.create(username='test_user')
         self.client.force_login(user=user)
         response = self.client.get(
-            reverse('contacts:profile', kwargs={'pk': not_user.pk}))
+            reverse('user-detail', kwargs={'pk': not_user.pk}))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_update_user_authorized(self):
@@ -81,7 +81,7 @@ class UserDetailTests(TestCase):
             'first_name': 'Updated'
         }
         response = self.client.put(
-            reverse('contacts:profile', kwargs={'pk': user.pk}),
+            reverse('user-detail', kwargs={'pk': user.pk}),
             data=(update_user),
             content_type='application/json')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
@@ -94,7 +94,7 @@ class UserDetailTests(TestCase):
         user = User.objects.create(username='test_user')
         self.client.force_login(user=user)
         response = self.client.put(
-            reverse('contacts:profile', kwargs={'pk': not_user.pk}),
+            reverse('user-detail', kwargs={'pk': not_user.pk}),
             data=({}),
             content_type='application/json')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
@@ -106,7 +106,7 @@ class UserDetailTests(TestCase):
         user = User.objects.create(username='test_user')
         self.client.force_login(user)
         response = self.client.delete(
-            reverse('contacts:profile', kwargs={'pk': user.pk}),
+            reverse('user-detail', kwargs={'pk': user.pk}),
             content_type='application/json'
         )
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
@@ -119,7 +119,7 @@ class UserDetailTests(TestCase):
         user = User.objects.create(username='test_user')
         self.client.force_login(user)
         response = self.client.delete(
-            reverse('contacts:profile', kwargs={'pk': not_user.pk}),
+            reverse('user-detail', kwargs={'pk': not_user.pk}),
             content_type='application/json'
         )
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
