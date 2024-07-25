@@ -1,3 +1,8 @@
 ## Summary
 
-I wanted to learn Django REST Framework (DRF), but not just follow the tutorial directly, instead creating my own project with a little extra depth and using the tutorial as a reference. A contact manager seemed appropriate for implementing the CRUD operations without too much extra complexity. I opted to develop my views using TDD rather than write and cURL/httpie test them, use PostgreSQL for my database, and build a React front end on top of the API.
+Developing a Contact Manager to learn Django REST Framework and practice TDD during view creation.
+
+### Stack
+* Django REST Framework
+* PostgreSQL
+* React
