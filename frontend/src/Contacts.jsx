@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "./Navbar";
+import { fuzzySearch } from "./utility/fuzzySearch";
 
 const ContactsPage = () => {
   const [contacts, setContacts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [showForm, setShowForm] = useState(false);
+  const [query, setQuery] = useState("");
   const [newContact, setNewContact] = useState({
     first_name: "",
     last_name: "",
@@ -107,6 +109,11 @@ const ContactsPage = () => {
     }
   };
 
+  const filteredContacts = contacts.filter(contact => {
+    const fullName = `${contact.first_name} ${contact.last_name}`.toLowerCase();
+    return fullName.includes(query.toLowerCase());
+  });
+
   useEffect(() => {
     fetchContacts();
   }, []);
@@ -132,6 +139,13 @@ const ContactsPage = () => {
             Add New Contact
           </button>
         )}
+        <input
+          type="text"
+          placeholder="Search contacts by name..."
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          style={styles.searchInput}
+        />
         {showForm && (
           <form onSubmit={handleAddContact} style={styles.form}>
             <div style={styles.inputGroup}>
@@ -194,16 +208,16 @@ const ContactsPage = () => {
             <button type="button" onClick={handleCancel} style={styles.cancelButton}>Cancel</button>
           </form>
         )}
-        {contacts.length > 0 ? (
+        {filteredContacts.length > 0 ? (
           <ul style={styles.list}>
-            {contacts.map((contact) => (
+            {filteredContacts.map((contact) => (
               <li key={contact.id} style={styles.listItem}>
                 <div style={styles.contactInfo}>
                   <strong>{contact.first_name} {contact.last_name} | </strong>
                   <em><strong>Email</strong>: {contact.email} </em>
                   <span> </span>
-                  <em><strong>Phone</strong>: {contact.phone}</em> <br/>
-                  <em><strong>Notes</strong>: {contact.notes}</em> <br/>
+                  <em><strong>Phone</strong>: {contact.phone}</em> <br />
+                  <em><strong>Notes</strong>: {contact.notes}</em> <br />
                 </div>
                 <div style={styles.buttonContainer}>
                   <button
@@ -239,6 +253,14 @@ const styles = {
   title: {
     textAlign: "center",
     marginBottom: "20px",
+  },
+  searchInput: {
+    width: "100%",
+    padding: "10px",
+    marginBottom: "20px",
+    borderRadius: "4px",
+    border: "1px solid #ccc",
+    fontSize: "16px",
   },
   list: {
     listStyleType: "none",
