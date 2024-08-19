@@ -33,7 +33,17 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
             password = validated_data.pop('password', None)
             instance.set_password(password)
         return super().update(instance, validated_data)
-        
+    
+    def validate_username(self, value):
+        if User.objects.filter(username=value).exists():
+            raise serializers.ValidationError("This username is already taken.")
+        return value
+
+    def validate_email(self, value):
+        if User.objects.filter(email=value).exists():
+            raise serializers.ValidationError("This email is already in use.")
+        return value
+
 
     class Meta:
         model = User
